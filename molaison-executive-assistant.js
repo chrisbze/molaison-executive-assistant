@@ -102,7 +102,31 @@ class MolaisonExecutiveAssistant {
         
         // Initialize assistant modules
         await this.initializeAssistants();
-        
+}
+
+  // --- Your HTML routes go here ---
+  setupHtmlRoutes() {
+    this.app.get('/', (req, res) => {
+      res.sendFile(path.join(__dirname, 'molaison-assistant-chat.html'));
+    });
+
+    this.app.get('/molaison-assistant-chat.html', (req, res) => {
+      res.sendFile(path.join(__dirname, 'molaison-assistant-chat.html'));
+    });
+
+    this.app.get('/assistant-configuration.html', (req, res) => {
+      res.sendFile(path.join(__dirname, 'assistant-configuration.html'));
+    });
+  }
+
+  // --- Start method at the bottom ---
+  start() {
+    this.setupHtmlRoutes(); // make sure to call it!
+    this.app.listen(3000, () => {
+      console.log('Server running on http://localhost:3000');
+    });
+  }
+}
         console.log('✅ Molaison Executive Assistant ready!');
     }
 
