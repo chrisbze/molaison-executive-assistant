@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Molaison Executive Assistant - API Configuration</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+        }
+
+        .config-sections {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+        }
+
+        .config-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .section-header i {
+            font-size: 1.5rem;
+            margin-right: 15px;
+            color: #3498db;
+        }
+
+        .section-header h2 {
+            color: #2c3e50;
+            font-size: 1.3rem;
+        }
+
+        .api-item {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #3498db;
+        }
+
+        .api-item h3 {
+            color: #2c3e50;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .api-status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .status-connected {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-disconnected {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .api-item p {
+            color: #6c757d;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #495057;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            margin-right: 10px;
+        }
+
+        .btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .btn-test {
+            background: #28a745;
+        }
+
+        .btn-test:hover {
+            background: #218838;
+        }
+
+        .btn-save {
+            background: #17a2b8;
+        }
+
+        .btn-save:hover {
+            background: #138496;
+        }
+
+        .instructions {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 20px;
+        }
+
+        .instructions h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .instructions ol {
+            color: #495057;
+            line-height: 1.6;
+        }
+
+        .instructions li {
+            margin-bottom: 10px;
+        }
+
+        .code-block {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .mcp-tools {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .tool-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #28a745;
+            text-align: center;
+        }
+
+        .tool-card i {
+            font-size: 2rem;
+            color: #28a745;
+            margin-bottom: 10px;
+        }
+
+        .tool-card h4 {
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .tool-card p {
+            color: #6c757d;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-cogs"></i> Molaison Executive Assistant Configuration</h1>
+            <p>Configure API integrations and MCP tools to enable full task execution capabilities</p>
+            
+            <div style="margin-top: 20px; padding: 15px; background: rgba(52, 152, 219, 0.1); border-radius: 10px;">
+                <h3 style="margin-bottom: 10px; color: #2c3e50;">
+                    <i class="fas fa-cloud"></i> Deployment Status
+                </h3>
+                <div id="deployment-status">
+                    <span style="color: #e74c3c;">⚠️ Running Locally Only</span>
+                    <p style="margin: 5px 0; font-size: 0.9rem; color: #7f8c8d;">
+                        Your assistant is only accessible on your computer. Deploy it to make it available online.
+                    </p>
+                    <button class="btn" onclick="deployAssistant()" style="margin-top: 10px; background: #27ae60;">
+                        <i class="fas fa-rocket"></i> Deploy Now (Free)
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="config-sections">
+            <!-- Core AI Services -->
+            <div class="config-section">
+                <div class="section-header">
+                    <i class="fas fa-brain"></i>
+                    <h2>Core AI Services</h2>
+                </div>
+
+                <div class="api-item">
+                    <h3>
+                        OpenAI GPT-4
+                        <span class="api-status status-disconnected" id="openai-status">Disconnected</span>
+                    </h3>
+                    <p>Required for advanced AI responses, intent analysis, and content generation</p>
+                    <div class="form-group">
+                        <label for="openai-key">API Key:</label>
+                        <input type="password" id="openai-key" placeholder="sk-...">
+                    </div>
+                    <button class="btn btn-test" onclick="testOpenAI()">Test Connection</button>
+                    <button class="btn btn-save" onclick="saveOpenAI()">Save</button>
+                </div>
+
+                <div class="api-item">
+                    <h3>
+                        Perplexity AI
+                        <span class="api-status status-disconnected" id="perplexity-status">Disconnected</span>
+                    </h3>
+                    <p>For research tasks and real-time information gathering</p>
+                    <div class="form-group">
+                        <label for="perplexity-key">API Key:</label>
+                        <input type="password" id="perplexity-key" placeholder="pplx-...">
+                    </div>
+                    <button class="btn btn-test" onclick="testPerplexity()">Test Connection</button>
+                    <button class="btn btn-save" onclick="savePerplexity()">Save</button>
+                </div>
+            </div>
+
+            <!-- Communication Services -->
+            <div class="config-section">
+                <div class="section-header">
+                    <i class="fas fa-phone"></i>
+                    <h2>Communication Services</h2>
+                </div>
+
+                <div class="api-item">
+                    <h3>
+                        Twilio (Phone Calls)
+                        <span class="api-status status-disconnected" id="twilio-status">Disconnected</span>
+                    </h3>
+                    <p>For making phone calls on your behalf</p>
+                    <div class="form-group">
+                        <label for="twilio-sid">Account SID:</label>
+                        <input type="text" id="twilio-sid" placeholder="AC...">
+                    </div>
+                    <div class="form-group">
+                        <label for="twilio-token">Auth Token:</label>
+                        <input type="password" id="twilio-token" placeholder="Your auth token">
+                    </div>
+                    <div class="form-group">
+                        <label for="twilio-phone">Phone Number:</label>
+                        <input type="text" id="twilio-phone" placeholder="+1234567890">
+                    </div>
+                    <button class="btn btn-test" onclick="testTwilio()">Test Connection</button>
+                    <button class="btn btn-save" onclick="saveTwilio()">Save</button>
+                </div>
+
+                <div class="api-item">
+                    <h3>
+                        Gmail API
+                        <span class="api-status status-disconnected" id="gmail-status">Disconnected</span>
+                    </h3>
+                    <p>For email management and responses</p>
+                    <div class="form-group">
+                        <label for="gmail-client-id">Client ID:</label>
+                        <input type="text" id="gmail-client-id" placeholder="Your Gmail client ID">
+                    </div>
+                    <div class="form-group">
+                        <label for="gmail-client-secret">Client Secret:</label>
+                        <input type="password" id="gmail-client-secret" placeholder="Your Gmail client secret">
+                    </div>
+                    <div class="warning">
+                        <strong>Gmail Setup Required:</strong> You need to set up Google Cloud OAuth 2.0 credentials first.
+                        <a href="https://console.cloud.google.com/" target="_blank">Google Cloud Console</a>
+                    </div>
+                    <button class="btn btn-test" onclick="testGmail()">Test Connection</button>
+                    <button class="btn btn-save" onclick="saveGmail()">Save & Authenticate</button>
+                    <button class="btn" onclick="authenticateGmail()" style="background: #4285f4;">
+                        <i class="fab fa-google"></i> Connect Gmail
+                    </button>
+                </div>
+            </div>
+
+            <!-- Automation & Business -->
+            <div class="config-section">
+                <div class="section-header">
+                    <i class="fas fa-robot"></i>
+                    <h2>Automation & Business Tools</h2>
+                </div>
+
+                <div class="api-item">
+                    <h3>
+                        Make (formerly Integromat)
+                        <span class="api-status status-disconnected" id="make-status">Disconnected</span>
+                    </h3>
+                    <p>Advanced workflow automation and API integrations</p>
+                    <div class="form-group">
+                        <label for="make-token">API Token:</label>
+                        <input type="password" id="make-token" placeholder="Your Make API token">
+                    </div>
+                    <div class="form-group">
+                        <label for="make-team-id">Team ID:</label>
+                        <input type="text" id="make-team-id" placeholder="Your Make team ID">
+                    </div>
+                    <button class="btn btn-test" onclick="testMake()">Test Connection</button>
+                    <button class="btn btn-save" onclick="saveMake()">Save</button>
+                </div>
+
+                <div class="api-item">
+                    <h3>
+                        VAPI (Voice AI)
+                        <span class="api-status status-disconnected" id="vapi-status">Disconnected</span>
+                    </h3>
+                    <p>Advanced voice AI for phone calls and conversations</p>
+                    <div class="form-group">
+                        <label for="vapi-key">Private Key:</label>
+                        <input type="password" id="vapi-key" placeholder="Your VAPI private key">
+                    </div>
+                    <div class="form-group">
+                        <label for="vapi-public">Public Key:</label>
+                        <input type="text" id="vapi-public" placeholder="Your VAPI public key">
+                    </div>
+                    <button class="btn btn-test" onclick="testVAPI()">Test Connection</button>
+                    <button class="btn btn-save" onclick="saveVAPI()">Save</button>
+                </div>
+
+                <div class="api-item">
+                    <h3>
+                        GoHighLevel (GHL)
+                        <span class="api-status status-disconnected" id="ghl-status">Disconnected</span>
+                    </h3>
+                    <p>CRM, funnel builder, and marketing automation platform</p>
+                    <div class="form-group">
+                        <label for="ghl-key">API Key:</label>
+                        <input type="password" id="ghl-key" placeholder="Your GHL API key">
+                    </div>
+                    <div class="form-group">
+                        <label for="ghl-location">Location ID:</label>
+                        <input type="text" id="ghl-location" placeholder="Your GHL location ID">
+                    </div>
+                    <button class="btn btn-test" onclick="testGHL()">Test Connection</button>
+                    <button class="btn btn-save" onclick="saveGHL()">Save</button>
+                </div>
+
+                <div class="api-item">
+                    <h3>
+                        Notion
+                        <span class="api-status status-disconnected" id="notion-status">Disconnected</span>
+                    </h3>
+                    <p>Database and workspace management, content organization</p>
+                    <div class="form-group">
+                        <label for="notion-token">Integration Token:</label>
+                        <input type="password" id="notion-token" placeholder="Your Notion integration token">
+                    </div>
+                    <div class="form-group">
+                        <label for="notion-database">Database ID:</label>
+                        <input type="text" id="notion-database" placeholder="Your Notion database ID">
+                    </div>
+                    <button class="btn btn-test" onclick="testNotion()">Test Connection</button>
+                    <button class="btn btn-save" onclick="saveNotion()">Save</button>
+                </div>
+            </div>
+
+            <!-- Social Media Platforms -->
+            <div class="config-section">
+                <div class="section-header">
+                    <i class="fas fa-share-alt"></i>
+                    <h2>Social Media Platforms</h2>
+                </div>
+
+                <div class="api-item">
+                    <h3>
+                        Facebook Business API
+                        <span class="api-status status-disconnected" id="facebook-status">Disconnected</span>
+                    </h3>
+                    <p>Facebook posting, ads management, and analytics</p>
+                    <div class="form-group">
+                        <label for="facebook-token">Access Token:</label>
+                        <input type="password" id="facebook-token" placeholder="Your Facebook access token">
+                    </div>
+                    <div class="form-group">
+                        <label for="facebook-page">Page ID:</label>
+                        <input type="text" id="facebook-page" placeholder="Your Facebook page ID">
+                    </div>
+                    <button class="btn btn-test" onclick="testFacebook()">Test Connection</button>
+                    <button class="btn btn-save" onclick="saveFacebook()">Save</button>
+                </div>
+
+                <div class="api-item">
+                    <h3>
+                        Instagram Business API
+                        <span class="api-status status-disconnected" id="instagram-status">Disconnected</span>
+                    </h3>
+                    <p>Instagram posting, stories, and business insights</p>
+                    <div class="form-group">
+                        <label for="instagram-token">Access Token:</label>
+                        <input type="password" id="instagram-token" placeholder="Your Instagram access token">
+                    </div>
+                    <div class="form-group">
+                        <label for="instagram-account">Business Account ID:</label>
+                        <input type="text" id="instagram-account" placeholder="Your Instagram business account ID">
+                    </div>
+                    <button class="btn btn-test" onclick="testInstagram()">Test Connection</button>
+                    <button class="btn btn-save" onclick="saveInstagram()">Save</button>
+                </div>
+
+                <div class="api-item">
+                    <h3>
+                        WhatsApp Business API
+                        <span class="api-status status-disconnected" id="whatsapp-status">Disconnected</span>
+                    </h3>
+                    <p>WhatsApp messaging, automation, and business communication</p>
+                    <div class="form-group">
+                        <label for="whatsapp-token">Access Token:</label>
+                        <input type="password" id="whatsapp-token" placeholder="Your WhatsApp Business API token">
+                    </div>
+                    <div class="form-group">
+                        <label for="whatsapp-phone">Phone Number ID:</label>
+                        <input type="text" id="whatsapp-phone" placeholder="Your WhatsApp business phone number ID">
+                    </div>
+                    <button class="btn btn-test" onclick="testWhatsApp()">Test Connection</button>
+                    <button class="btn btn-save" onclick="saveWhatsApp()">Save</button>
+                </div>
+
+                <div class="api-item">
+                    <h3>
+                        TikTok Business API
+                        <span class="api-status status-disconnected" id="tiktok-status">Disconnected</span>
+                    </h3>
+                    <p>TikTok content posting and advertising management</p>
+                    <div class="form-group">
+                        <label for="tiktok-token">Access Token:</label>
+                        <input type="password" id="tiktok-token" placeholder="Your TikTok access token">
+                    </div>
+                    <div class="form-group">
+                        <label for="tiktok-account">Business Account ID:</label>
+                        <input type="text" id="tiktok-account" placeholder="Your TikTok business account ID">
+                    </div>
+                    <button class="btn btn-test" onclick="testTikTok()">Test Connection</button>
+                    <button class="btn btn-save" onclick="saveTikTok()">Save</button>
+                </div>
+            </div>
+
+            <!-- AI & Content Creation -->
+            <div class="config-section">
+                <div class="section-header">
+                    <i class="fas fa-magic"></i>
+                    <h2>AI & Content Creation</h2>
+                </div>
+
+                <div class="api-item">
+                    <h3>
+                        Claude AI (Anthropic)
+                        <span class="api-status status-disconnected" id="claude-status">Disconnected</span>
+                    </h3>
+                    <p>Advanced AI conversations and content generation</p>
+                    <div class="form-group">
+                        <label for="claude-key">API Key:</label>
+                        <input type="password" id="claude-key" placeholder="Your Claude API key">
+                    </div>
+                    <div class="form-group">
+                        <label for="claude-model">Model:</label>
+                        <select id="claude-model">
+                            <option value="claude-3-sonnet-20240229">Claude 3 Sonnet</option>
+                            <option value="claude-3-opus-20240229">Claude 3 Opus</option>
+                            <option value="claude-3-haiku-20240307">Claude 3 Haiku</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-test" onclick="testClaude()">Test Connection</button>
+                    <button class="btn btn-save" onclick="saveClaude()">Save</button>
+                </div>
+
+                <div class="api-item">
+                    <h3>
+                        Google Gemini AI
+                        <span class="api-status status-disconnected" id="gemini-status">Disconnected</span>
+                    </h3>
+                    <p>Google's multimodal AI for text, image, and code generation</p>
+                    <div class="form-group">
+                        <label for="gemini-key">API Key:</label>
+                        <input type="password" id="gemini-key" placeholder="Your Gemini API key">
+                    </div>
+                    <div class="form-group">
+                        <label for="gemini-model">Model:</label>
+                        <select id="gemini-model">
+                            <option value="gemini-pro">Gemini Pro</option>
+                            <option value="gemini-pro-vision">Gemini Pro Vision</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-test" onclick="testGemini()">Test Connection</button>
+                    <button class="btn btn-save" onclick="saveGemini()">Save</button>
+                </div>
+
+                <div class="api-item">
+                    <h3>
+                        HeyGen AI
+                        <span class="api-status status-disconnected" id="heygen-status">Disconnected</span>
+                    </h3>
+                    <p>AI avatar video generation and personalized video content</p>
+                    <div class="form-group">
+                        <label for="heygen-key">API Key:</label>
+                        <input type="password" id="heygen-key" placeholder="Your HeyGen API key">
+                    </div>
+                    <div class="form-group">
+                        <label for="heygen-avatar">Avatar ID:</label>
+                        <input type="text" id="heygen-avatar" placeholder="Your preferred avatar ID">
+                    </div>
+                    <button class="btn btn-test" onclick="testHeyGen()">Test Connection</button>
+                    <button class="btn btn-save" onclick="saveHeyGen()">Save</button>
+                </div>
+
+                <div class="api-item">
+                    <h3>
+                        ElevenLabs AI
+                        <span class="api-status status-disconnected" id="elevenlabs-status">Disconnected</span>
+                    </h3>
+                    <p>AI voice synthesis and audio generation</p>
+                    <div class="form-group">
+                        <label for="elevenlabs-key">API Key:</label>
+                        <input type="password" id="elevenlabs-key" placeholder="Your ElevenLabs API key">
+                    </div>
+                    <div class="form-group">
+                        <label for="elevenlabs-voice">Voice ID:</label>
+                        <input type="text" id="elevenlabs-voice" placeholder="Your preferred voice ID">
+                    </div>
+                    <button class="btn btn-test" onclick="testElevenLabs()">Test Connection</button>
+                    <button class="btn btn-save" onclick="saveElevenLabs()">Save</button>
+                </div>
+
+                <div class="api-item">
+                    <h3>
+                        Runway AI
+                        <span class="api-status status-disconnected" id="runway-status">Disconnected</span>
+                    </h3>
+                    <p>AI video generation, editing, and creative tools</p>
+                    <div class="form-group">
+                        <label for="runway-key">API Key:</label>
+                        <input type="password" id="runway-key" placeholder="Your Runway API key">
+                    </div>
+                    <button class="btn btn-test" onclick="testRunway()">Test Connection</button>
+                    <button class="btn btn-save" onclick="saveRunway()">Save</button>
+                </div>
+            </div>
+
+            <!-- Research & Analytics -->
+            <div class="config-section">
+                <div class="section-header">
+                    <i class="fas fa-chart-line"></i>
+                    <h2>Research & Analytics</h2>
+                </div>
+
+                <div class="api-item">
+                    <h3>
+                        AnswerThePublic
+                        <span class="api-status status-disconnected" id="atp-status">Disconnected</span>
+                    </h3>
+                    <p>Search insights, keyword research, and content ideation</p>
+                    <div class="form-group">
+                        <label for="atp-key">API Key:</label>
+                        <input type="password" id="atp-key" placeholder="Your AnswerThePublic API key">
+                    </div>
+                    <div class="form-group">
+                        <label for="atp-username">Username:</label>
+                        <input type="text" id="atp-username" placeholder="Your AnswerThePublic username">
+                    </div>
+                    <button class="btn btn-test" onclick="testAnswerThePublic()">Test Connection</button>
+                    <button class="btn btn-save" onclick="saveAnswerThePublic()">Save</button>
+                </div>
+
+                <div class="api-item">
+                    <h3>
+                        Whispr Flow (Voice)
+                        <span class="api-status status-disconnected" id="whispr-status">Disconnected</span>
+                    </h3>
+                    <p>Advanced voice-to-text processing and speech recognition</p>
+                    <div class="form-group">
+                        <label for="whispr-key">API Key:</label>
+                        <input type="password" id="whispr-key" placeholder="Your Whispr Flow API key">
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="whispr-enabled" style="width: auto; margin-right: 10px;">
+                            Enable Advanced Voice Processing
+                        </label>
+                    </div>
+                    <button class="btn btn-test" onclick="testWhispr()">Test Connection</button>
+                    <button class="btn btn-save" onclick="saveWhispr()">Save</button>
+                </div>
+            </div>
+
+            <!-- MCP Tools Integration -->
+            <div class="config-section">
+                <div class="section-header">
+                    <i class="fas fa-tools"></i>
+                    <h2>MCP Tools Integration</h2>
+                </div>
+
+                <div class="api-item">
+                    <h3>
+                        MCP Server Connection
+                        <span class="api-status status-disconnected" id="mcp-status">Disconnected</span>
+                    </h3>
+                    <p>Connect to Model Context Protocol tools for enhanced capabilities</p>
+                    <div class="form-group">
+                        <label for="mcp-url">MCP Server URL:</label>
+                        <input type="text" id="mcp-url" value="http://localhost:3001" placeholder="http://localhost:3001">
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="mcp-enabled" style="width: auto; margin-right: 10px;" checked>
+                            Enable MCP Integration
+                        </label>
+                    </div>
+                    <button class="btn btn-test" onclick="testMCP()">Test Connection</button>
+                    <button class="btn btn-save" onclick="saveMCP()">Save</button>
+                </div>
+
+                <div class="mcp-tools">
+                    <div class="tool-card">
+                        <i class="fas fa-file-code"></i>
+                        <h4>File Operations</h4>
+                        <p>Read, write, edit files</p>
+                    </div>
+                    <div class="tool-card">
+                        <i class="fas fa-terminal"></i>
+                        <h4>Shell Commands</h4>
+                        <p>Execute system commands</p>
+                    </div>
+                    <div class="tool-card">
+                        <i class="fas fa-globe"></i>
+                        <h4>Web Scraping</h4>
+                        <p>Extract web data</p>
+                    </div>
+                    <div class="tool-card">
+                        <i class="fas fa-database"></i>
+                        <h4>Database Access</h4>
+                        <p>Query and update data</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="instructions">
+            <h2><i class="fas fa-info-circle"></i> Setup Instructions</h2>
+            
+            <div class="warning">
+                <strong>Important:</strong> These API keys give your assistant real capabilities. Keep them secure and never share them publicly.
+            </div>
+
+            <ol>
+                <li><strong>Get API Keys:</strong>
+                    <ul>
+                        <li>OpenAI: <a href="https://platform.openai.com/api-keys" target="_blank">platform.openai.com/api-keys</a></li>
+                        <li>Perplexity: <a href="https://docs.perplexity.ai/docs" target="_blank">docs.perplexity.ai</a></li>
+                        <li>Twilio: <a href="https://console.twilio.com/" target="_blank">console.twilio.com</a></li>
+                        <li>Gmail: <a href="https://console.cloud.google.com/" target="_blank">Google Cloud Console</a></li>
+                    </ul>
+                </li>
+                <li><strong>Configure APIs:</strong> Enter your API keys above and test each connection</li>
+                <li><strong>Update .env File:</strong> Your settings will be saved to the .env file</li>
+                <li><strong>Restart Assistant:</strong> Restart the assistant for changes to take effect</li>
+                <li><strong>Test Functionality:</strong> Use the chat interface to test each capability</li>
+            </ol>
+
+            <div class="code-block">
+# Your .env file will contain:
+OPENAI_API_KEY=your_actual_key_here
+PERPLEXITY_API_KEY=your_actual_key_here
+TWILIO_ACCOUNT_SID=your_actual_sid_here
+# ... and more
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:3003';
+
+        // Test OpenAI Connection
+        async function testOpenAI() {
+            const key = document.getElementById('openai-key').value;
+            if (!key) {
+                alert('Please enter your OpenAI API key');
+                return;
+            }
+
+            try {
+                // Test with a simple completion request
+                const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${key}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        model: 'gpt-3.5-turbo',
+                        messages: [{ role: 'user', content: 'Hello' }],
+                        max_tokens: 5
+                    })
+                });
+
+                if (response.ok) {
+                    updateStatus('openai-status', 'Connected', 'connected');
+                    alert('OpenAI connection successful!');
+                } else {
+                    updateStatus('openai-status', 'Invalid Key', 'disconnected');
+                    alert('OpenAI connection failed. Please check your API key.');
+                }
+            } catch (error) {
+                updateStatus('openai-status', 'Error', 'disconnected');
+                alert('OpenAI connection error: ' + error.message);
+            }
+        }
+
+        // Save configuration to backend
+        async function saveOpenAI() {
+            const key = document.getElementById('openai-key').value;
+            if (!key) {
+                alert('Please enter your OpenAI API key');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/api/config/openai`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ api_key: key })
+                });
+
+                if (response.ok) {
+                    alert('OpenAI configuration saved! Please restart the assistant.');
+                } else {
+                    alert('Failed to save OpenAI configuration');
+                }
+            } catch (error) {
+                alert('Error saving configuration: ' + error.message);
+            }
+        }
+
+        // Test MCP Connection
+        async function testMCP() {
+            const url = document.getElementById('mcp-url').value;
+            try {
+                const response = await fetch(`${url}/health`);
+                if (response.ok) {
+                    updateStatus('mcp-status', 'Connected', 'connected');
+                    alert('MCP server connection successful!');
+                } else {
+                    updateStatus('mcp-status', 'Server Error', 'disconnected');
+                    alert('MCP server is not responding');
+                }
+            } catch (error) {
+                updateStatus('mcp-status', 'Connection Failed', 'disconnected');
+                alert('Cannot connect to MCP server. Make sure it is running on ' + url);
+            }
+        }
+
+        // Automation & Business Tools
+        async function testMake() {
+            const token = document.getElementById('make-token').value;
+            if (!token) { alert('Please enter Make API token'); return; }
+            
+            try {
+                const response = await fetch('https://www.make.com/api/v2/organizations', {
+                    headers: { 'Authorization': `Token ${token}` }
+                });
+                
+                if (response.ok) {
+                    updateStatus('make-status', 'Connected', 'connected');
+                    alert('Make API connection successful!');
+                } else {
+                    updateStatus('make-status', 'Invalid Token', 'disconnected');
+                    alert('Make API connection failed. Check your token.');
+                }
+            } catch (error) {
+                updateStatus('make-status', 'Error', 'disconnected');
+                alert('Make API error: ' + error.message);
+            }
+        }
+
+        async function testVAPI() {
+            const key = document.getElementById('vapi-key').value;
+            if (!key) { alert('Please enter VAPI private key'); return; }
+            
+            try {
+                const response = await fetch('https://api.vapi.ai/call', {
+                    method: 'GET',
+                    headers: { 'Authorization': `Bearer ${key}` }
+                });
+                
+                if (response.ok) {
+                    updateStatus('vapi-status', 'Connected', 'connected');
+                    alert('VAPI connection successful!');
+                } else {
+                    updateStatus('vapi-status', 'Invalid Key', 'disconnected');
+                    alert('VAPI connection failed.');
+                }
+            } catch (error) {
+                updateStatus('vapi-status', 'Error', 'disconnected');
+                alert('VAPI error: ' + error.message);
+            }
+        }
+
+        async function testGHL() {
+            const key = document.getElementById('ghl-key').value;
+            if (!key) { alert('Please enter GHL API key'); return; }
+            
+            try {
+                const response = await fetch('https://services.leadconnectorhq.com/locations', {
+                    headers: { 'Authorization': `Bearer ${key}` }
+                });
+                
+                if (response.ok) {
+                    updateStatus('ghl-status', 'Connected', 'connected');
+                    alert('GoHighLevel connection successful!');
+                } else {
+                    updateStatus('ghl-status', 'Invalid Key', 'disconnected');
+                    alert('GHL connection failed.');
+                }
+            } catch (error) {
+                updateStatus('ghl-status', 'Error', 'disconnected');
+                alert('GHL error: ' + error.message);
+            }
+        }
+
+        async function testNotion() {
+            const token = document.getElementById('notion-token').value;
+            if (!token) { alert('Please enter Notion integration token'); return; }
+            
+            try {
+                const response = await fetch('https://api.notion.com/v1/users/me', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Notion-Version': '2022-06-28'
+                    }
+                });
+                
+                if (response.ok) {
+                    updateStatus('notion-status', 'Connected', 'connected');
+                    alert('Notion connection successful!');
+                } else {
+                    updateStatus('notion-status', 'Invalid Token', 'disconnected');
+                    alert('Notion connection failed.');
+                }
+            } catch (error) {
+                updateStatus('notion-status', 'Error', 'disconnected');
+                alert('Notion error: ' + error.message);
+            }
+        }
+
+        // Social Media Platform Tests
+        async function testFacebook() {
+            const token = document.getElementById('facebook-token').value;
+            if (!token) { alert('Please enter Facebook access token'); return; }
+            
+            try {
+                const response = await fetch(`https://graph.facebook.com/me?access_token=${token}`);
+                
+                if (response.ok) {
+                    updateStatus('facebook-status', 'Connected', 'connected');
+                    alert('Facebook API connection successful!');
+                } else {
+                    updateStatus('facebook-status', 'Invalid Token', 'disconnected');
+                    alert('Facebook connection failed.');
+                }
+            } catch (error) {
+                updateStatus('facebook-status', 'Error', 'disconnected');
+                alert('Facebook error: ' + error.message);
+            }
+        }
+
+        async function testInstagram() {
+            const token = document.getElementById('instagram-token').value;
+            if (!token) { alert('Please enter Instagram access token'); return; }
+            
+            try {
+                const response = await fetch(`https://graph.facebook.com/v18.0/me?access_token=${token}`);
+                
+                if (response.ok) {
+                    updateStatus('instagram-status', 'Connected', 'connected');
+                    alert('Instagram API connection successful!');
+                } else {
+                    updateStatus('instagram-status', 'Invalid Token', 'disconnected');
+                    alert('Instagram connection failed.');
+                }
+            } catch (error) {
+                updateStatus('instagram-status', 'Error', 'disconnected');
+                alert('Instagram error: ' + error.message);
+            }
+        }
+
+        async function testWhatsApp() {
+            const token = document.getElementById('whatsapp-token').value;
+            if (!token) { alert('Please enter WhatsApp access token'); return; }
+            
+            updateStatus('whatsapp-status', 'Ready to Test', 'connected');
+            alert('WhatsApp Business API configured. Testing requires webhook verification.');
+        }
+
+        async function testTikTok() {
+            const token = document.getElementById('tiktok-token').value;
+            if (!token) { alert('Please enter TikTok access token'); return; }
+            
+            updateStatus('tiktok-status', 'Ready to Test', 'connected');
+            alert('TikTok Business API configured. Full testing requires app approval.');
+        }
+
+        // AI & Content Creation Tests
+        async function testClaude() {
+            const key = document.getElementById('claude-key').value;
+            if (!key) { alert('Please enter Claude API key'); return; }
+            
+            try {
+                const response = await fetch('https://api.anthropic.com/v1/messages', {
+                    method: 'POST',
+                    headers: {
+                        'x-api-key': key,
+                        'anthropic-version': '2023-06-01',
+                        'content-type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        model: 'claude-3-haiku-20240307',
+                        max_tokens: 10,
+                        messages: [{ role: 'user', content: 'Hello' }]
+                    })
+                });
+                
+                if (response.ok) {
+                    updateStatus('claude-status', 'Connected', 'connected');
+                    alert('Claude API connection successful!');
+                } else {
+                    updateStatus('claude-status', 'Invalid Key', 'disconnected');
+                    alert('Claude connection failed.');
+                }
+            } catch (error) {
+                updateStatus('claude-status', 'Error', 'disconnected');
+                alert('Claude error: ' + error.message);
+            }
+        }
+
+        async function testGemini() {
+            const key = document.getElementById('gemini-key').value;
+            if (!key) { alert('Please enter Gemini API key'); return; }
+            
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${key}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: 'Hello' }] }]
+                    })
+                });
+                
+                if (response.ok) {
+                    updateStatus('gemini-status', 'Connected', 'connected');
+                    alert('Gemini API connection successful!');
+                } else {
+                    updateStatus('gemini-status', 'Invalid Key', 'disconnected');
+                    alert('Gemini connection failed.');
+                }
+            } catch (error) {
+                updateStatus('gemini-status', 'Error', 'disconnected');
+                alert('Gemini error: ' + error.message);
+            }
+        }
+
+        async function testHeyGen() {
+            const key = document.getElementById('heygen-key').value;
+            if (!key) { alert('Please enter HeyGen API key'); return; }
+            
+            try {
+                const response = await fetch('https://api.heygen.com/v1/avatar.list', {
+                    headers: { 'X-API-KEY': key }
+                });
+                
+                if (response.ok) {
+                    updateStatus('heygen-status', 'Connected', 'connected');
+                    alert('HeyGen API connection successful!');
+                } else {
+                    updateStatus('heygen-status', 'Invalid Key', 'disconnected');
+                    alert('HeyGen connection failed.');
+                }
+            } catch (error) {
+                updateStatus('heygen-status', 'Error', 'disconnected');
+                alert('HeyGen error: ' + error.message);
+            }
+        }
+
+        async function testElevenLabs() {
+            const key = document.getElementById('elevenlabs-key').value;
+            if (!key) { alert('Please enter ElevenLabs API key'); return; }
+            
+            try {
+                const response = await fetch('https://api.elevenlabs.io/v1/voices', {
+                    headers: { 'xi-api-key': key }
+                });
+                
+                if (response.ok) {
+                    updateStatus('elevenlabs-status', 'Connected', 'connected');
+                    alert('ElevenLabs API connection successful!');
+                } else {
+                    updateStatus('elevenlabs-status', 'Invalid Key', 'disconnected');
+                    alert('ElevenLabs connection failed.');
+                }
+            } catch (error) {
+                updateStatus('elevenlabs-status', 'Error', 'disconnected');
+                alert('ElevenLabs error: ' + error.message);
+            }
+        }
+
+        async function testRunway() {
+            const key = document.getElementById('runway-key').value;
+            if (!key) { alert('Please enter Runway API key'); return; }
+            
+            updateStatus('runway-status', 'Ready to Test', 'connected');
+            alert('Runway API configured. Full testing requires specific model access.');
+        }
+
+        async function testAnswerThePublic() {
+            const key = document.getElementById('atp-key').value;
+            if (!key) { alert('Please enter AnswerThePublic API key'); return; }
+            
+            try {
+                const response = await fetch('https://api.answerthepublic.com/api/v1/credits', {
+                    headers: { 'Authorization': `Bearer ${key}` }
+                });
+                
+                if (response.ok) {
+                    updateStatus('atp-status', 'Connected', 'connected');
+                    alert('AnswerThePublic API connection successful!');
+                } else {
+                    updateStatus('atp-status', 'Invalid Key', 'disconnected');
+                    alert('AnswerThePublic connection failed.');
+                }
+            } catch (error) {
+                updateStatus('atp-status', 'Error', 'disconnected');
+                alert('AnswerThePublic error: ' + error.message);
+            }
+        }
+
+        // Original API tests
+        function testPerplexity() { alert('Perplexity API test - implement with actual credentials'); }
+        function testTwilio() { alert('Twilio API test - implement with actual credentials'); }
+        function testGmail() { alert('Gmail API test - implement with OAuth flow'); }
+        function testWhispr() { alert('Whispr Flow test - implement with actual credentials'); }
+
+        // Save functions for all new APIs
+        function saveMake() { alert('Make configuration will be saved to backend'); }
+        function saveVAPI() { alert('VAPI configuration will be saved to backend'); }
+        function saveGHL() { alert('GoHighLevel configuration will be saved to backend'); }
+        function saveNotion() { alert('Notion configuration will be saved to backend'); }
+        function saveFacebook() { alert('Facebook configuration will be saved to backend'); }
+        function saveInstagram() { alert('Instagram configuration will be saved to backend'); }
+        function saveWhatsApp() { alert('WhatsApp configuration will be saved to backend'); }
+        function saveTikTok() { alert('TikTok configuration will be saved to backend'); }
+        function saveClaude() { alert('Claude configuration will be saved to backend'); }
+        function saveGemini() { alert('Gemini configuration will be saved to backend'); }
+        function saveHeyGen() { alert('HeyGen configuration will be saved to backend'); }
+        function saveElevenLabs() { alert('ElevenLabs configuration will be saved to backend'); }
+        function saveRunway() { alert('Runway configuration will be saved to backend'); }
+        function saveAnswerThePublic() { alert('AnswerThePublic configuration will be saved to backend'); }
+
+        function savePerplexity() { alert('Save Perplexity config'); }
+        function saveTwilio() { alert('Save Twilio config'); }
+        
+        // Gmail OAuth Authentication
+        async function saveGmail() {
+            const clientId = document.getElementById('gmail-client-id').value;
+            const clientSecret = document.getElementById('gmail-client-secret').value;
+            
+            if (!clientId || !clientSecret) {
+                alert('Please enter both Gmail Client ID and Client Secret');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/api/config/gmail`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        client_id: clientId, 
+                        client_secret: clientSecret 
+                    })
+                });
+
+                if (response.ok) {
+                    alert('Gmail credentials saved! Now click "Connect Gmail" to authenticate.');
+                    updateStatus('gmail-status', 'Ready to Connect', 'connected');
+                } else {
+                    alert('Failed to save Gmail configuration');
+                }
+            } catch (error) {
+                alert('Error saving Gmail configuration: ' + error.message);
+            }
+        }
+
+        function authenticateGmail() {
+            window.open(`${API_BASE}/auth/gmail`, '_blank', 'width=500,height=600,scrollbars=yes,resizable=yes');
+        }
+
+        function testGmail() { 
+            alert('Gmail requires OAuth 2.0 setup. Please save your credentials first, then click "Connect Gmail"'); 
+        }
+
+        // Deployment Functions
+        async function deployAssistant() {
+            if (confirm('This will deploy your assistant to Railway (free hosting). Continue?')) {
+                updateDeploymentStatus('🚀 Preparing deployment...', '#3498db');
+                
+                try {
+                    // Check if Railway is available
+                    const response = await fetch('https://railway.app/api/v2/me', {
+                        method: 'GET',
+                        headers: { 'Accept': 'application/json' }
+                    }).catch(() => null);
+
+                    updateDeploymentStatus('📝 Follow the deployment instructions:', '#f39c12');
+                    
+                    const instructions = `
+                        1. Install Railway CLI: npm install -g @railway/cli
+                        2. Run: railway login
+                        3. Run: railway init
+                        4. Run: railway up
+                        
+                        Or run: node deploy.js (automated script)
+                    `;
+                    
+                    alert('Deployment Instructions:\n' + instructions);
+                    
+                    // Offer to download deployment script
+                    if (confirm('Download automated deployment script?')) {
+                        const script = `
+#!/usr/bin/env node
+const { execSync } = require('child_process');
+console.log('🚀 Deploying Molaison Executive Assistant...');
+
+try {
+    execSync('railway login', { stdio: 'inherit' });
+    execSync('railway init -n molaison-executive-assistant', { stdio: 'inherit' });
+    execSync('railway up', { stdio: 'inherit' });
+    console.log('✅ Deployment completed!');
+} catch (error) {
+    console.error('❌ Deployment failed:', error.message);
+}
+                        `;
+                        
+                        const blob = new Blob([script], { type: 'application/javascript' });
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = 'deploy-assistant.js';
+                        a.click();
+                        URL.revokeObjectURL(url);
+                    }
+                } catch (error) {
+                    updateDeploymentStatus('❌ Deployment preparation failed', '#e74c3c');
+                    alert('Error: ' + error.message);
+                }
+            }
+        }
+
+        function updateDeploymentStatus(message, color) {
+            const statusDiv = document.getElementById('deployment-status');
+            statusDiv.innerHTML = `<span style="color: ${color};">${message}</span>`;
+        }
+
+        function saveWhispr() { alert('Save Whispr config'); }
+        function saveSocial() { alert('Save Social Media config'); }
+        function saveMCP() { alert('Save MCP config'); }
+
+        // Helper function to update status indicators
+        function updateStatus(elementId, text, status) {
+            const element = document.getElementById(elementId);
+            element.textContent = text;
+            element.className = `api-status status-${status}`;
+        }
+
+        // Check current configuration status on load
+        window.addEventListener('load', async () => {
+            try {
+                const response = await fetch(`${API_BASE}/api/config/status`);
+                if (response.ok) {
+                    const status = await response.json();
+                    // Update UI based on current configuration
+                    console.log('Current config status:', status);
+                }
+            } catch (error) {
+                console.log('Could not fetch configuration status');
+            }
+        });
+    </script>
+</body>
+</html>

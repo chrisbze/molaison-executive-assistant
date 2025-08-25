@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Molaison Executive Assistant</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 15px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: between;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+
+        .business-selector {
+            display: flex;
+            gap: 10px;
+            margin-left: auto;
+        }
+
+        .business-btn {
+            padding: 8px 16px;
+            border: 2px solid #3498db;
+            background: transparent;
+            color: #3498db;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .business-btn.active {
+            background: #3498db;
+            color: white;
+        }
+
+        .business-btn:hover {
+            background: #3498db;
+            color: white;
+        }
+
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            padding: 20px;
+            gap: 20px;
+        }
+
+        .assistant-capabilities {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .capability-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: white;
+        }
+
+        .capability-card:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .capability-card i {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .capability-card h3 {
+            font-size: 1rem;
+            margin-bottom: 5px;
+        }
+
+        .capability-card p {
+            font-size: 0.8rem;
+            opacity: 0.9;
+        }
+
+        .chat-messages {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 20px;
+            overflow-y: auto;
+            max-height: 400px;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            padding: 10px 15px;
+            border-radius: 10px;
+            max-width: 80%;
+        }
+
+        .message.user {
+            background: rgba(52, 152, 219, 0.8);
+            color: white;
+            margin-left: auto;
+            text-align: right;
+        }
+
+        .message.assistant {
+            background: rgba(255, 255, 255, 0.9);
+            color: #2c3e50;
+        }
+
+        .message.system {
+            background: rgba(241, 196, 15, 0.2);
+            color: #f39c12;
+            text-align: center;
+            margin: 10px auto;
+            max-width: 60%;
+            font-size: 0.9rem;
+        }
+
+        .input-section {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 15px;
+        }
+
+        .voice-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .voice-btn:hover {
+            background: #c0392b;
+            transform: scale(1.1);
+        }
+
+        .voice-btn.recording {
+            background: #27ae60;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        #messageInput {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 25px;
+            padding: 12px 20px;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        #messageInput::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .send-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 12px 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .send-btn:hover {
+            background: #2980b9;
+        }
+
+        .send-btn:disabled {
+            background: rgba(255, 255, 255, 0.3);
+            cursor: not-allowed;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .business-context {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 15px;
+            color: white;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .assistant-capabilities {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .business-selector {
+                flex-direction: column;
+                gap: 5px;
+            }
+            
+            .business-btn {
+                padding: 6px 12px;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1><i class="fas fa-brain"></i> Molaison Executive Assistant</h1>
+        <div class="business-selector">
+            <button class="business-btn active" data-business="both">Both Businesses</button>
+            <button class="business-btn" data-business="agency">Molaison Agency</button>
+            <button class="business-btn" data-business="ai">Molaison AI</button>
+            <button class="business-btn" data-business="client">Client Projects</button>
+            <button class="business-btn" onclick="openConfiguration()" style="background: #e67e22; border-color: #e67e22; color: white;">
+                <i class="fas fa-cogs"></i> Config
+            </button>
+        </div>
+    </div>
+
+    <div class="chat-container">
+        <div class="business-context" id="businessContext">
+            Managing both Molaison Agency (Insurance & Business Services) and Molaison AI (AI Tools & SEO Platform)
+        </div>
+
+        <div class="assistant-capabilities">
+            <div class="capability-card" onclick="quickAction('email')">
+                <i class="fas fa-envelope"></i>
+                <h3>Email Manager</h3>
+                <p>Check, respond, organize emails</p>
+            </div>
+            <div class="capability-card" onclick="quickAction('calendar')">
+                <i class="fas fa-calendar"></i>
+                <h3>Calendar & Reservations</h3>
+                <p>Schedule meetings, make reservations</p>
+            </div>
+            <div class="capability-card" onclick="quickAction('phone')">
+                <i class="fas fa-phone"></i>
+                <h3>Phone Assistant</h3>
+                <p>Make calls, client outreach</p>
+            </div>
+            <div class="capability-card" onclick="quickAction('research')">
+                <i class="fas fa-search"></i>
+                <h3>Research Assistant</h3>
+                <p>Market analysis, competitor research</p>
+            </div>
+            <div class="capability-card" onclick="quickAction('social')">
+                <i class="fas fa-share-alt"></i>
+                <h3>Social Media</h3>
+                <p>Content creation, scheduling</p>
+            </div>
+            <div class="capability-card" onclick="quickAction('projects')">
+                <i class="fas fa-project-diagram"></i>
+                <h3>Project Manager</h3>
+                <p>Client projects, custom builds</p>
+            </div>
+            <div class="capability-card" onclick="quickAction('productivity')">
+                <i class="fas fa-chart-line"></i>
+                <h3>Life Coach</h3>
+                <p>Goal setting, productivity optimization</p>
+            </div>
+            <div class="capability-card" onclick="quickAction('scraper')">
+                <i class="fas fa-spider"></i>
+                <h3>Web Scraper</h3>
+                <p>Data collection, lead generation</p>
+            </div>
+            <div class="capability-card" onclick="quickAction('prompts')">
+                <i class="fas fa-magic"></i>
+                <h3>AI Prompt Generator</h3>
+                <p>ChatGPT/Gemini prompts, viral content</p>
+            </div>
+            <div class="capability-card" onclick="quickAction('calendar')">
+                <i class="fas fa-calendar-week"></i>
+                <h3>Content Calendar</h3>
+                <p>7-day planning, optimal times</p>
+            </div>
+        </div>
+
+        <div class="chat-messages" id="chatMessages">
+            <div class="message system">
+                Welcome! I'm your AI Executive Assistant. I can help manage both Molaison Agency and Molaison AI, plus handle your client projects. How can I assist you today?
+            </div>
+        </div>
+
+        <div class="input-section">
+            <button class="voice-btn" id="voiceBtn" onclick="toggleVoiceRecording()">
+                <i class="fas fa-microphone"></i>
+            </button>
+            <input type="text" id="messageInput" placeholder="Ask me anything about your businesses..." onkeypress="handleKeyPress(event)">
+            <button class="send-btn" id="sendBtn" onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        let currentBusiness = 'both';
+        let isRecording = false;
+        let isLoading = false;
+
+        const API_BASE = 'http://localhost:3003';
+
+        // Business selector functionality
+        document.querySelectorAll('.business-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.business-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentBusiness = btn.dataset.business;
+                updateBusinessContext();
+            });
+        });
+
+        function updateBusinessContext() {
+            const contextEl = document.getElementById('businessContext');
+            const contexts = {
+                both: 'Managing both Molaison Agency (Insurance & Business Services) and Molaison AI (AI Tools & SEO Platform)',
+                agency: 'Focus: Molaison Agency - Insurance & Business Services, Client Management, CRM',
+                ai: 'Focus: Molaison AI - AI Tools, SEO Platform, Content Generation, Video Automation',
+                client: 'Focus: Client Projects - Custom builds and solutions for other businesses'
+            };
+            contextEl.textContent = contexts[currentBusiness] || contexts.both;
+        }
+
+        function quickAction(action) {
+            const actions = {
+                email: 'Check my emails and show me anything urgent that needs my attention',
+                calendar: 'Show me my calendar for today and this week',
+                phone: 'Help me make some client outreach calls',
+                research: 'I need competitive analysis for my market',
+                social: 'Help me create and schedule social media content',
+                projects: 'Show me the status of my current client projects',
+                productivity: 'Help me optimize my daily schedule and productivity',
+                scraper: 'I need to collect data about my competitors',
+                prompts: 'Generate 5 high-end image prompts for professional marketing campaigns',
+                'content-calendar': 'Create a weekly content calendar with optimal posting times'
+            };
+            
+            document.getElementById('messageInput').value = actions[action] || 'How can I help you?';
+            sendMessage();
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
+        }
+
+        async function sendMessage() {
+            const messageInput = document.getElementById('messageInput');
+            const message = messageInput.value.trim();
+            
+            if (!message || isLoading) return;
+            
+            // Add user message to chat
+            addMessage(message, 'user');
+            messageInput.value = '';
+            
+            // Show loading state
+            setLoading(true);
+            
+            try {
+                console.log('Sending message to API:', message);
+                console.log('API endpoint:', `${API_BASE}/api/chat`);
+                
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+                
+                const response = await fetch(`${API_BASE}/api/chat`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        context: {
+                            business: currentBusiness,
+                            timestamp: new Date()
+                        },
+                        businessContext: currentBusiness
+                    }),
+                    signal: controller.signal
+                });
+                
+                clearTimeout(timeoutId);
+                console.log('Response status:', response.status);
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    addMessage(data.response, 'assistant', data);
+                    
+                    // Show intent if available
+                    if (data.intent && data.intent !== 'general') {
+                        addMessage(`Handled as: ${data.intent.replace('_', ' ')}`, 'system');
+                    }
+                } else {
+                    addMessage(data.fallback || 'Sorry, I encountered an error processing your request.', 'assistant');
+                }
+                
+            } catch (error) {
+                console.error('Error sending message:', error);
+                
+                if (error.name === 'AbortError') {
+                    addMessage('Request timed out. The server may be processing a complex request. Please try again.', 'assistant');
+                } else if (error.message.includes('Failed to fetch')) {
+                    addMessage('Cannot connect to the assistant server. Please check if the server is running on port 3003.', 'assistant');
+                } else if (error.name === 'TypeError') {
+                    addMessage('Network error. Please check your connection and try again.', 'assistant');
+                } else {
+                    addMessage(`Connection error: ${error.message}. Please try again in a moment.`, 'assistant');
+                }
+            }
+            
+            setLoading(false);
+        }
+
+        function addMessage(content, type, data = null) {
+            const messagesContainer = document.getElementById('chatMessages');
+            const messageEl = document.createElement('div');
+            messageEl.className = `message ${type}`;
+            
+            // Check if this is a prompt response and add copy functionality
+            if (type === 'assistant' && data && (data.prompts || data.calendar || data.caption)) {
+                const messageContent = document.createElement('div');
+                messageContent.textContent = content;
+                messageEl.appendChild(messageContent);
+                
+                // Add copy buttons for prompts
+                if (data.prompts) {
+                    const promptContainer = document.createElement('div');
+                    promptContainer.style.marginTop = '10px';
+                    
+                    data.prompts.forEach((prompt, index) => {
+                        const promptBox = document.createElement('div');
+                        promptBox.style.cssText = 'background: rgba(0,0,0,0.1); padding: 10px; margin: 5px 0; border-radius: 8px; position: relative;';
+                        promptBox.textContent = prompt;
+                        
+                        const copyBtn = document.createElement('button');
+                        copyBtn.innerHTML = '<i class="fas fa-copy"></i>';
+                        copyBtn.style.cssText = 'position: absolute; top: 5px; right: 5px; background: #3498db; color: white; border: none; border-radius: 3px; padding: 5px; cursor: pointer; font-size: 12px;';
+                        copyBtn.onclick = () => copyToClipboard(prompt);
+                        
+                        promptBox.appendChild(copyBtn);
+                        promptContainer.appendChild(promptBox);
+                    });
+                    
+                    messageEl.appendChild(promptContainer);
+                } else {
+                    messageEl.textContent = content;
+                }
+            } else {
+                messageEl.textContent = content;
+            }
+            
+            messagesContainer.appendChild(messageEl);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                // Show temporary success message
+                const successMsg = document.createElement('div');
+                successMsg.textContent = '✅ Copied to clipboard!';
+                successMsg.style.cssText = 'position: fixed; top: 20px; right: 20px; background: #27ae60; color: white; padding: 10px; border-radius: 5px; z-index: 1000;';
+                document.body.appendChild(successMsg);
+                
+                setTimeout(() => {
+                    document.body.removeChild(successMsg);
+                }, 2000);
+            }).catch(err => {
+                console.error('Copy failed:', err);
+                alert('Copy failed. Please select and copy manually.');
+            });
+        }
+
+        function setLoading(loading) {
+            isLoading = loading;
+            const sendBtn = document.getElementById('sendBtn');
+            
+            if (loading) {
+                sendBtn.innerHTML = '<div class="loading"></div>';
+                sendBtn.disabled = true;
+                addMessage('Processing your request...', 'system');
+            } else {
+                sendBtn.innerHTML = 'Send';
+                sendBtn.disabled = false;
+            }
+        }
+
+        // Voice recording functionality
+        function toggleVoiceRecording() {
+            const voiceBtn = document.getElementById('voiceBtn');
+            
+            if (!isRecording) {
+                startVoiceRecording();
+                voiceBtn.classList.add('recording');
+                voiceBtn.innerHTML = '<i class="fas fa-stop"></i>';
+                isRecording = true;
+                addMessage('🎤 Listening... (Voice recording started)', 'system');
+            } else {
+                stopVoiceRecording();
+                voiceBtn.classList.remove('recording');
+                voiceBtn.innerHTML = '<i class="fas fa-microphone"></i>';
+                isRecording = false;
+                addMessage('🎤 Processing voice input...', 'system');
+            }
+        }
+
+        async function startVoiceRecording() {
+            try {
+                // This would integrate with Whispr Flow or Web Speech API
+                if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                    const recognition = new SpeechRecognition();
+                    
+                    recognition.continuous = false; // Changed to false to avoid hanging
+                    recognition.interimResults = true;
+                    recognition.lang = 'en-US';
+                    recognition.maxAlternatives = 1;
+                    
+                    recognition.onresult = function(event) {
+                        let finalTranscript = '';
+                        for (let i = event.resultIndex; i < event.results.length; i++) {
+                            if (event.results[i].isFinal) {
+                                finalTranscript += event.results[i][0].transcript;
+                            }
+                        }
+                        if (finalTranscript) {
+                            document.getElementById('messageInput').value = finalTranscript;
+                            // Auto-stop recording when we get a final result
+                            stopVoiceRecording();
+                        }
+                    };
+                    
+                    recognition.onerror = function(event) {
+                        console.error('Speech recognition error:', event.error);
+                        addMessage(`Voice error: ${event.error}`, 'system');
+                        stopVoiceRecording();
+                    };
+                    
+                    recognition.onend = function() {
+                        // Ensure UI is reset when recognition ends
+                        if (isRecording) {
+                            stopVoiceRecording();
+                        }
+                    };
+                    
+                    recognition.start();
+                    window.currentRecognition = recognition;
+                    
+                    // Set a timeout to prevent hanging
+                    window.voiceTimeout = setTimeout(() => {
+                        if (isRecording) {
+                            addMessage('Voice timeout - please try again', 'system');
+                            stopVoiceRecording();
+                        }
+                    }, 10000); // 10 second timeout
+                    
+                } else {
+                    addMessage('Voice recognition not supported in this browser', 'system');
+                    stopVoiceRecording();
+                }
+            } catch (error) {
+                console.error('Voice recording error:', error);
+                addMessage('Failed to start voice recording', 'system');
+                stopVoiceRecording();
+            }
+        }
+
+        function stopVoiceRecording() {
+            // Clear timeout if it exists
+            if (window.voiceTimeout) {
+                clearTimeout(window.voiceTimeout);
+                window.voiceTimeout = null;
+            }
+            
+            // Stop recognition
+            if (window.currentRecognition) {
+                window.currentRecognition.stop();
+                window.currentRecognition = null;
+            }
+            
+            // Reset UI state
+            isRecording = false;
+            const voiceBtn = document.getElementById('voiceBtn');
+            if (voiceBtn) {
+                voiceBtn.classList.remove('recording');
+                voiceBtn.innerHTML = '<i class="fas fa-microphone"></i>';
+            }
+        }
+
+        // Force stop all voice processing (emergency cleanup)
+        function forceStopVoice() {
+            try {
+                // Stop any active speech recognition
+                if (window.speechSynthesis) {
+                    window.speechSynthesis.cancel();
+                }
+                
+                // Clear all timeouts
+                if (window.voiceTimeout) {
+                    clearTimeout(window.voiceTimeout);
+                    window.voiceTimeout = null;
+                }
+                
+                // Stop recognition
+                if (window.currentRecognition) {
+                    window.currentRecognition.abort();
+                    window.currentRecognition = null;
+                }
+                
+                // Reset global state
+                isRecording = false;
+                
+                // Reset UI
+                const voiceBtn = document.getElementById('voiceBtn');
+                if (voiceBtn) {
+                    voiceBtn.classList.remove('recording');
+                    voiceBtn.innerHTML = '<i class="fas fa-microphone"></i>';
+                }
+                
+                addMessage('🔴 Voice processing force-stopped', 'system');
+                console.log('Voice processing force-stopped');
+            } catch (error) {
+                console.error('Error force-stopping voice:', error);
+            }
+        }
+        
+        // Make forceStopVoice available globally for debugging
+        window.forceStopVoice = forceStopVoice;
+
+        // Configuration panel functionality
+        function openConfiguration() {
+            const configUrl = 'assistant-configuration.html';
+            window.open(configUrl, '_blank', 'width=1200,height=800,scrollbars=yes,resizable=yes');
+        }
+
+        // Initialize the application
+        window.addEventListener('load', () => {
+            console.log('🏢 Molaison Executive Assistant initialized');
+            console.log('💼 Ready to manage Agency, AI, and Client operations');
+            console.log('🎤 Voice controls: Click microphone or call window.forceStopVoice() if stuck');
+            
+            // Auto-focus message input
+            document.getElementById('messageInput').focus();
+        });
+    </script>
+</body>
+</html>
